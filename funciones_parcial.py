@@ -17,30 +17,95 @@ def leer_json(direccion:str)->list:
 
 def quick_sort(lista:list, orden:str)->list:
     lista_copia = lista.copy()
-    lista_menores=[]
-    lista_mayores=[]
-    lista_ordenada=[]
+    lista_menores = []
+    lista_mayores = []
+    lista_ordenada = []
+
     if len(lista) < 2:
         return lista
     else:
-        pivote = lista_copia[0]
+        aux = lista_copia[0]
         for item in lista_copia[1:]:
             if orden == "ascendente" or orden == "asc":
-                if (item < pivote):
+                if (item < aux):
                     lista_menores.append(item)
                 else:
                     lista_mayores.append(item)
             elif orden == "descendente" or orden == "desc":
-                if (item < pivote):
+                if (item < aux):
                     lista_mayores.append(item)
                 else:
                     lista_menores.append(item)
     lista_menores = quick_sort(lista_menores, orden)
-    lista_menores.append(pivote)
+    lista_menores.append(aux)
     lista_mayores = quick_sort(lista_mayores, orden)
     lista_ordenada = lista_menores + lista_mayores
     return lista_ordenada
 
+def obtener_numero_entero(mensaje:str,mensaje_error:str)-> int:
+    patron = r'^[0-9+]?\d+$'
+    if mensaje == "" or mensaje_error == "":
+        print("Error, no se ingresaron parametros")
+    else:
+        while True:
+            numero = input(mensaje)
+            if re.match(patron,numero):
+                return int(numero)
+            else:
+                print(mensaje_error)
+
+def obtener_texto(mensaje:str,mensaje_error:str)-> str:
+    patron = r'^[a-zA-Z +]?\d+$'
+    if mensaje == "" or mensaje_error == "":
+        print("Error, no se ingresaron parametros")
+    else:
+        while True:
+            numero = input(mensaje)
+            if re.match(patron,numero):
+                return numero
+            else:
+                print(mensaje_error)
+
+def validar_estadisticas(estadisticas:list, estadistica:str)->bool:
+    if len(estadisticas) == 0:
+        print("No se ingresaron estadisticas")
+    else:
+        for estadistica in estadisticas:
+            if estadistica != estadistica:
+                return False
+            else:
+                return True
+
+def listar_jugadores_con_indice(dict_jugadores:dict):
+    lista_jugadores = dict_jugadores["jugadores"]
+    indice_jugador = -1
+    if len(lista_jugadores) > 0:
+        print("______________________________________________________________")
+        for jugador in lista_jugadores:
+            indice_jugador += 1
+            print("|Id: {0}\t\t|Nombre: {1}| Posicion: {2}|".format(indice_jugador,jugador["nombre"].center(20), jugador["posicion"].center(20)))
+        print("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯")
+    else:
+        print("No hay jugadores en la lista") 
+
+
+def obtener_jugador(dict_jugadores:dict,nombre_jugador:str=""):
+    retorno = None
+    patron = r"^[a-zA-Z]+"
+    lista_jugadores = dict_jugadores["jugadores"]
+    if lista_jugadores == [] or nombre_jugador == "":
+
+        print("Error, lista o nombre invalidos")
+    else:
+        for jugador in lista_jugadores:
+            if re.findall(patron,jugador["nombre"])[0] == nombre_jugador:
+                retorno = jugador
+                break
+    
+    if retorno:
+        return retorno
+    else:
+        print("Error, jugador invalido")
 
 def imprimir_menu():
     print("_____________________________________________________________________________________________________________________________________")
@@ -71,13 +136,3 @@ def imprimir_menu():
     print("25. Exportar rankings a un archivo CSV")
     print("0. Salir del programa")
     print("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯")
-
-def validar_estadisticas(estadisticas:list, estadistica:str)->bool:
-    if len(estadisticas) == 0:
-        print("No se ingresaron estadisticas")
-    else:
-        for estadistica in estadisticas:
-            if estadistica != estadistica:
-                return False
-            else:
-                return True
