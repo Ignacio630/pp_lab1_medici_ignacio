@@ -96,31 +96,50 @@ def obtener_jugador(lista_jugador:list=[],nombre_jugador:str=""):
     else:
         print("Error, jugador invalido")
 
-def calcular_estadisticas(lista_jugadores:list,estadistica:float,min_max:str)-> float:
+def calcular_estadisticas(lista_jugadores:list,estadistica:str,min_max:str)-> float:
     retorno = 0
-    aux_estadistica_min = 9999999
+    aux_estadistica_min = 0
     aux_estadistica_max = 0
     
-    if lista_jugadores == [] or estadistica < 0 or min_max == " " :
+    if lista_jugadores == [] or estadistica == "" or min_max == "" :
         print("Error, lista, estadisitica u orden invalido")
     else:
-        for jugador in lista_jugadores["jugadores"]:
-            if min_max == "min":
-                if jugador["estadisticas"][estadistica] < aux_estadistica_min:
-                    aux_estadistica_min = jugador["estadisticas"][estadistica]
+            for jugador in lista_jugadores["jugadores"]:
+                if validar_estadisticas(jugador["estadisticas"],estadistica):
+                    if min_max == "min":
+                        if jugador["estadisticas"][estadistica] < aux_estadistica_min or aux_estadistica_min == 0:
+                            aux_estadistica_min = jugador["estadisticas"][estadistica]
+                    elif min_max == "max":
+                        if jugador["estadisticas"][estadistica] > aux_estadistica_max:
+                            aux_estadistica_max = jugador["estadisticas"][estadistica]
+                        
+                    if min_max == "min":
+                        retorno = aux_estadistica_min
+                    elif min_max == "max":
+                        retorno = aux_estadistica_max
+                    else: 
+                        retorno = 0
                 else:
-                    aux_estadistica_max = jugador["estadisticas"][estadistica]
+                    print("Error, estadistica invalida")
+    if retorno != 0:
+        return retorno
+    else:
+        print("Error, estadistica invalida")
 
-# listar_jugadores(lista_dt)
+# listar_jugadores(lista_dt)estadistica
 
 # resultado = promedio_puntos_por_partido(lista_dt)
 
 # print("El promedio de los puntos por partido es: {0:.2f}".format(resultado))
 
-nombre_jugador = input("Ingrese el nombre del jugador: ")
-resultado = obtener_jugador(lista_dt,nombre_jugador.capitalize())
+# nombre_jugador = input("Ingrese el nombre del jugador: ")
+# resultado = obtener_jugador(lista_dt,nombre_jugador.capitalize())
 
-validar_salon_fama(resultado)
+# validar_salon_fama(resultado)
+
+# resultado = calcular_estadisticas(lista_dt,"rebotes_totales","min")
+
+# print("El jugador con menor promedio de puntos por partido es: {0:.0f}".format(resultado))
 
 # while opcion != 0:
 #     imprimir_menu()

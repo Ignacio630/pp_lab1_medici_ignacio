@@ -71,3 +71,13 @@ def imprimir_menu():
     print("25. Exportar rankings a un archivo CSV")
     print("0. Salir del programa")
     print("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯")
+
+def validar_estadisticas(estadisticas:list, estadistica:str)->bool:
+    if len(estadisticas) == 0:
+        print("No se ingresaron estadisticas")
+    else:
+        for estadistica in estadisticas:
+            if estadistica != estadistica:
+                return False
+            else:
+                return True
