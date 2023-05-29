@@ -40,10 +40,19 @@ def exportar_estadisticas_csv(estadisticas:list,jugador:dict):
             for estadistica in estadisticas:
                 archivo.write("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}\n".format(jugador["nombre"],jugador["posicion"],estadistica["temporadas"],estadistica["puntos_totales"],estadistica["promedio_puntos_por_partido"],estadistica["rebotes_totales"],estadistica["promedio_rebotes_por_partido"],estadistica["asistencias_totales"],estadistica["robos_totales"],estadistica["bloqueos_totales"],estadistica["porcentaje_tiros_de_campo"],estadistica["porcentaje_tiros_libres"],estadistica["porcentaje_tiros_triples"]))
 #4
-def logros_jugadores(jugador:dict):
-    for logros in jugador["logros"]:
-        print(logros)
-
+def logros_jugadores(lista_jugadores:list, nombre_jugador:str):
+    retorno = []
+    jugador_encontrado = None
+    for jugador in lista_jugadores["jugadores"]:
+        if re.findall(r"^[a-zA-Z]+",jugador["nombre"])[0] == nombre_jugador:
+            jugador_encontrado = jugador
+            break
+    if jugador_encontrado != None:
+        print("Logros del jugador: ",jugador_encontrado["nombre"])
+        for logro in jugador_encontrado["logros"]:
+            print(logro)
+    else:
+        print("No se encontró el jugador")
 #5 
 def promedio_puntos_por_partido(lista_jugadores:list)-> float:
     acumulador_promedios = 0
@@ -54,10 +63,81 @@ def promedio_puntos_por_partido(lista_jugadores:list)-> float:
     promedio = acumulador_promedios / contador_promedios
     return promedio
 
+#6
+def validar_salon_fama(jugador:dict):
+    flag_salon_de_la_fama = False
+
+    if not jugador:
+        print("Error, jugador invalido")
+    else:
+        for logros in jugador["logros"]:
+            if re.findall("Miembro del Salon de la Fama del Baloncesto$",logros):
+                flag_salon_de_la_fama = True
+
+    if flag_salon_de_la_fama:
+        print("El jugador {0} si pertenece al salon de la fama! ".format(jugador["nombre"]))
+    else:
+        print("El jugador {0} no pertenece al salon de la fama! ".format(jugador["nombre"]))
+
+
+def obtener_jugador(lista_jugador:list=[],nombre_jugador:str=""):
+    retorno = None
+    if lista_jugador == [] or nombre_jugador == "":
+
+        print("Error, lista o nombre invalidos")
+    else:
+        for jugador in lista_jugador["jugadores"]:
+            if re.findall(r"^[a-zA-Z]+",jugador["nombre"])[0] == nombre_jugador:
+                retorno = jugador
+                break
+    
+    if retorno:
+        return retorno
+    else:
+        print("Error, jugador invalido")
+
+def calcular_estadisticas(lista_jugadores:list,estadistica:float,min_max:str)-> float:
+    retorno = 0
+    aux_estadistica_min = 9999999
+    aux_estadistica_max = 0
+    
+    if lista_jugadores == [] or estadistica < 0 or min_max == " " :
+        print("Error, lista, estadisitica u orden invalido")
+    else:
+        for jugador in lista_jugadores["jugadores"]:
+            if min_max == "min":
+                if jugador["estadisticas"][estadistica] < aux_estadistica_min:
+                    aux_estadistica_min = jugador["estadisticas"][estadistica]
+                else:
+                    aux_estadistica_max = jugador["estadisticas"][estadistica]
+
 # listar_jugadores(lista_dt)
-# indice = int(input("Ingrese el indice del jugador: "))
-# resultado = estadisticas_jugador(lista_dt,indice)
-# exportar_estadisticas_csv(resultado,lista_dt["jugadores"][indice])
-# logros_jugadores(lista_dt["jugadores"][indice])
-resultado = promedio_puntos_por_partido(lista_dt)
-print("El promedio de los puntos por partido es: {0:.2f}".format(resultado))
+
+# resultado = promedio_puntos_por_partido(lista_dt)
+
+# print("El promedio de los puntos por partido es: {0:.2f}".format(resultado))
+
+nombre_jugador = input("Ingrese el nombre del jugador: ")
+resultado = obtener_jugador(lista_dt,nombre_jugador.capitalize())
+
+validar_salon_fama(resultado)
+
+# while opcion != 0:
+#     imprimir_menu()
+#     opcion = int(input("Ingrese una opcion"))
+#     if opcion == 1:
+#         listar_jugadores(lista_dt)
+#     elif opcion == 2:
+#         listar_jugadores(lista_dt)
+#         indice = int(input("Ingrese el indice del jugador: "))
+#         resultado = estadisticas_jugador(lista_dt,indice)
+#     elif opcion == 3:
+#         exportar_estadisticas_csv(resultado,lista_dt["jugadores"][indice])
+#     elif opcion == 4:
+#         nombre_jugador = input("Ingrese el nombre del jugador: ")
+#         logros_jugadores(lista_dt,nombre_jugador)
+#     elif opcion == 5:
+#         resultado = promedio_puntos_por_partido(lista_dt)
+#         print("El promedio de los puntos por partido es: {0:.2f}".format(resultado))
+#     elif opcion == 6:
+#         nombre_jugador = input("Ingrese el nombre del jugador: ")
