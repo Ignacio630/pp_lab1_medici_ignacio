@@ -129,7 +129,7 @@ def calcular_estadisticas(lista_jugadores:list,estadistica:str,min_max:str)-> fl
 # listar_jugadores(lista_dt)estadistica
 
 # resultado = promedio_puntos_por_partido(lista_dt)
-
+hola como estas
 # print("El promedio de los puntos por partido es: {0:.2f}".format(resultado))
 
 # nombre_jugador = input("Ingrese el nombre del jugador: ")
