@@ -94,35 +94,30 @@ def validar_salon_fama(jugador:dict):
     else:
         print("El jugador {0} no pertenece al salon de la fama! ".format(jugador["nombre"]))
 
-def calcular_estadisticas(lista_jugadores:list,estadistica:str,min_max:str)-> float:
-    retorno = 0
-    aux_jugador_min["estadisticas"][estadistica] = 0
-    aux_jugador_max["estadisticas"][estadistica] = 0
+def calcular_estadisticas(dict_jugadores:dict,estadistica:str,min_max:str)-> dict:
+    lista_jugadores = dict_jugadores["jugadores"]
+    if not lista_jugadores or not estadistica or not min_max:
+        print("Error, datos invalidos")
     
-    if lista_jugadores == [] or estadistica == "" or min_max == "" :
-        print("Error, lista, estadisitica u orden invalido")
-    else:
-            for jugador in lista_jugadores["jugadores"]:
-                if validar_estadisticas(jugador["estadisticas"],estadistica):
-                    if min_max == "min":
-                        if jugador["estadisticas"][estadistica] < aux_jugador_min["estadisticas"][estadistica] or aux_jugador_min["estadisticas"][estadistica] == 0:
-                            aux_jugador_min = jugador
-                    elif min_max == "max":
-                        if jugador["estadisticas"][estadistica] > aux_jugador_max["estadisticas"][estadistica]:
-                            aux_jugador_max = jugador
-                        
-                    if min_max == "min":
-                        retorno = aux_jugador_min
-                    elif min_max == "max":
-                        retorno = aux_jugador_max
-                    else: 
-                        print("Error, no se pudo obtener ninguna estadistica minima o maxima")
-                else:
-                    print("Error, estadistica invalida")
-    if retorno != 0:
-        return retorno
-    else:
-        print("Error, estadistica invalida")
+    if min_max != "min" and min_max != "max":
+        print("Error, no se pudo obtener ninguna estadística mínima o máxima")
+
+    aux_jugador = None
+    for jugador in lista_jugadores:
+        if not aux_jugador:
+            aux_jugador = jugador
+        else:
+            if min_max == "min":
+                if jugador["estadisticas"][estadistica] < aux_jugador["estadisticas"][estadistica]:
+                    aux_jugador = jugador
+            elif min_max == "max":
+                if jugador["estadisticas"][estadistica] > aux_jugador["estadisticas"][estadistica]:
+                    aux_jugador = jugador
+    return aux_jugador
+
+
+
+
 
 resultado_estadisticas_jugador = []
 
@@ -156,14 +151,14 @@ while opcion != 0:
         resultado = obtener_jugador(lista_dt,nombre_jugador.capitalize())
         validar_salon_fama(resultado)
     elif opcion == 7:
-        resultado = calcular_estadisticas(lista_dt,"rebotes_totales","max")
-        print("El jugador con la mayor catidad de rebotes totales es: {0} y tiene: {1:.0f}".format(resultado))
+        jugador_resultado = calcular_estadisticas(lista_dt,"rebotes_totales","max")
+        print("El jugador con mayor cantidad de rebotes totales es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["rebotes_totales"]))
     elif opcion == 8:
-        resultado = calcular_estadisticas(lista_dt,"porcentaje_tiros_de_campo","max")
-        print("El jugador el mayor porcentaje de tiros de campo es: {0} tiene {1:.0f}%".format(resultado))
+        jugador_resultado = calcular_estadisticas(lista_dt,"porcentaje_tiros_de_campo","max")
+        print("El jugador con mayor el mayor porcentaje de tiros de campo es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["porcentaje_tiros_de_campo"]))
     elif opcion == 9:
-        resultado = calcular_estadisticas(lista_dt,"rebotes_totales","max")
-        print("El jugador con mayor cantidad de asistencias totales es: {0} y tiene {1:.0f}".format(resultado))
+        jugador_resultado = calcular_estadisticas(lista_dt,"asistencias_totales","max")
+        print("El jugador con mayor cantidad de asistencias totales es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["asistencias_totales"]))
     elif opcion == 10:
         pass
     elif opcion == 11:
