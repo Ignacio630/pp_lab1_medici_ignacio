@@ -299,12 +299,6 @@ while opcion != 0:
         print("El jugador con mayor cantidad de temporadas es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["temporadas"]))
     elif opcion == 20:
         pass
-    elif opcion == 21:
-        pass
-    elif opcion == 22:
-        pass
-    elif opcion == 23:
-        pass
     elif opcion == 0:
         print("Gracias por usar mi programa...")
         break
