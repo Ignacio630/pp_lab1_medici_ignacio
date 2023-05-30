@@ -43,7 +43,7 @@ def quick_sort(lista:list, orden:str)->list:
     return lista_ordenada
 
 def obtener_numero_entero(mensaje:str,mensaje_error:str)-> int:
-    patron = r'^[0-9+]?\d+$'
+    patron = r'^[0-9+-]?\d+$'
     if mensaje == "" or mensaje_error == "":
         print("Error, no se ingresaron parametros")
     else:
