@@ -4,6 +4,12 @@ lista_dt = leer_json("dt.json")
 
 # 1
 def listar_jugadores(dict_jugadores:dict):
+    """
+    Lista el nombre y posicion de los jugadores
+    
+    Parametros:
+    dict_jugadores:dict = Diccionario con los jugadores
+    """
     lista_jugadores = dict_jugadores["jugadores"]
     if len(lista_jugadores) > 0:
         print("______________________________________________________________")
@@ -16,6 +22,17 @@ def listar_jugadores(dict_jugadores:dict):
   
 #2
 def estadisticas_jugador(dict_jugadores:dict,indice:int)-> list:
+    """
+    Muestra y devuelve las estadisticas del jugador seleccionado
+    
+    Parametros:
+    dict_jugadores:dict = Diccionario con los jugadores
+    indice:int = Indice del jugador
+    Devuelve:
+    lista_estadisticas:list: Lista de las estadisticas del jugador seleccionado
+    """
+    
+    
     lista_estadisticas = []
     lista_jugadores = dict_jugadores["jugadores"]
     if indice > len(lista_jugadores):
@@ -45,6 +62,13 @@ def estadisticas_jugador(dict_jugadores:dict,indice:int)-> list:
         print("Error, las estadisticas no existen")
 #3
 def exportar_estadisticas_csv(estadisticas:list,jugador:dict):
+    """
+    Exporta a un archivo csv con las estadisticas del jugador
+    
+    Parametros:
+    dict_jugadores:dict = Diccionario con los jugadores
+    jugador:dict = Jugador
+    """
     archivo_csv = "estadisticas_jugadores/estadisticas_{0}.csv".format(jugador["nombre"]).replace(" ","_").lower()
     if len(estadisticas) > 0:
         with open(archivo_csv,"w") as archivo:
@@ -53,7 +77,7 @@ def exportar_estadisticas_csv(estadisticas:list,jugador:dict):
                 archivo.write("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}\n".format(jugador["nombre"],jugador["posicion"],estadistica["temporadas"],estadistica["puntos_totales"],estadistica["promedio_puntos_por_partido"],estadistica["rebotes_totales"],estadistica["promedio_rebotes_por_partido"],estadistica["asistencias_totales"],estadistica["robos_totales"],estadistica["bloqueos_totales"],estadistica["porcentaje_tiros_de_campo"],estadistica["porcentaje_tiros_libres"],estadistica["porcentaje_tiros_triples"]))
     else:
         print("Error, no se ingresaron estadisticas")
-#4
+
 def logros_jugadores(dict_jugadores:dict, nombre_jugador:str):
     jugador_encontrado = None
     lista_jugadores = dict_jugadores["jugadores"]
@@ -68,18 +92,26 @@ def logros_jugadores(dict_jugadores:dict, nombre_jugador:str):
             print(logro)
     else:
         print("No se encontró el jugador")
-#5 
-def promedio_puntos_por_partido(lista_jugadores:list)-> float:
+
+def promedio_estadistica(dict_jugadores:dict,estadistica:str)-> float:
+    lista_jugadores = dict_jugadores["jugadores"]
     acumulador_promedios = 0
     contador_promedios = 0
-    for jugador in lista_jugadores["jugadores"]:
-        acumulador_promedios += jugador["estadisticas"]["promedio_puntos_por_partido"]
+    for jugador in lista_jugadores:
+        acumulador_promedios += jugador["estadisticas"][estadistica]
         contador_promedios += 1
     promedio = acumulador_promedios / contador_promedios
     return promedio
 
 #6
 def validar_salon_fama(jugador:dict):
+    """
+    Valida y muestra si el jugador pasado por parametros esta en el salon de la fama 
+    
+    Parametro:
+    jugador:dict = Jugador
+    
+    """
     flag_salon_de_la_fama = False
 
     if not jugador:
@@ -180,6 +212,7 @@ def promedio_puntos_por_partido_excluyendo_menor(dict_jugadores:dict,estadistica
 
 
 def calcular_logros(dict_jugadores:dict)-> int:
+    
     if not dict_jugadores:
         print("Error, parametros invalidos")
     lista_jugadores = dict_jugadores["jugadores"]
@@ -216,7 +249,7 @@ while opcion != 0:
         nombre_jugador = input("Ingrese el nombre del jugador: ")
         logros_jugadores(lista_dt,nombre_jugador.capitalize())
     elif opcion == 5:
-        resultado = promedio_puntos_por_partido(lista_dt)
+        resultado = promedio_estadistica(lista_dt,"promedio_puntos_por_partido")
         print("El promedio de los puntos por partido es: {0:.2f}".format(resultado))
     elif opcion == 6:
         listar_jugadores(lista_dt)
