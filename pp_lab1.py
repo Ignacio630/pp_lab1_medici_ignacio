@@ -96,6 +96,7 @@ def validar_salon_fama(jugador:dict):
 
 def calcular_estadisticas(dict_jugadores:dict,estadistica:str,min_max:str)-> dict:
     lista_jugadores = dict_jugadores["jugadores"]
+    
     if not lista_jugadores or not estadistica or not min_max:
         print("Error, datos invalidos")
     
@@ -115,13 +116,44 @@ def calcular_estadisticas(dict_jugadores:dict,estadistica:str,min_max:str)-> dic
                     aux_jugador = jugador
     return aux_jugador
 
+def promedio_por_partido(dict_jugadores:dict,estadistica:str,valor_usuario:int):
+    listar_jugadores = dict_jugadores["jugadores"]
+    aux_max_estadistica = []
+    
+    if not dict_jugadores or not estadistica or not valor_usuario:
+        print("Error al cargar los parametros")
+    
+    for jugador in listar_jugadores:
+        if valor_usuario < jugador["estadisticas"][estadistica]:
+            aux_max_estadistica.append(jugador)
+    
+    if not aux_max_estadistica:
+        print("Error, el valor ingresado es muy alto")
+    else:
+        for jugador in aux_max_estadistica:
+            print("|Nombre: {0} con un {1} de {2}".format(jugador["nombre"],re.sub("_"," ",estadistica),jugador["estadisticas"][estadistica]))
 
+# Calcular y mostrar el promedio de puntos por partido del equipo excluyendo al jugador con la menor cantidad de puntos por partido.
 
+def promedio_puntos_por_partido_excluyendo_menor(dict_jugadores:dict,estadistica:str,valor_usuario:int):
+    lista_jugadores = dict_jugadores["jugadores"]
+    if not dict_jugadores or not estadistica or not valor_usuario:
+        print("Error al cargar los parametros")
 
+    jugador_con_peor_promedio = calcular_estadisticas(dict_jugadores,estadistica,"min")
+    print(jugador_con_peor_promedio)
+    
+def calcular_logros(dict_jugadores:dict)-> int:
+    if not dict_jugadores:
+        print("Error, parametros invalidos")
+    lista_jugadores = dict_jugadores["jugadores"]
+    contador_logros = 
+    for jugador in lista_jugadores: 
+        print(len(jugador["logros"]))
 
-resultado_estadisticas_jugador = []
-
+calcular_logros(lista_dt)
 opcion = None
+promedio_puntos_por_partido_excluyendo_menor(lista_dt,"promedio_puntos_por_partido",10)
 while opcion != 0:
     imprimir_menu()
     opcion = obtener_numero_entero("Ingrese una opcion: ","Error, no se ingreso un entero :(")
@@ -129,6 +161,7 @@ while opcion != 0:
         listar_jugadores(lista_dt)
         input("Presione key para continuar...")
     elif opcion == 2:
+        resultado_estadisticas_jugador = []
         listar_jugadores_con_indice(lista_dt)
         indice = obtener_numero_entero("Ingrese el indice del jugador: ","Error, indice invalido")
         resultado_estadisticas_jugador = estadisticas_jugador(lista_dt,indice)
@@ -160,17 +193,27 @@ while opcion != 0:
         jugador_resultado = calcular_estadisticas(lista_dt,"asistencias_totales","max")
         print("El jugador con mayor cantidad de asistencias totales es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["asistencias_totales"]))
     elif opcion == 10:
-        pass
+        valor = obtener_numero_entero("Ingrese un valor: ","Error, valor invalido")
+        print("Los jugadores con mas puntos en promedio de puntos por partido que el valor {0} son: ".format(valor))
+        promedio_por_partido(lista_dt,"promedio_puntos_por_partido",valor)
     elif opcion == 11:
-        pass
+        valor = obtener_numero_entero("Ingrese un valor: ","Error, valor invalido")
+        print("Los jugadores con mas puntos en promedio de rebotes por partido que el valor {0} son: ".format(valor))
+        promedio_por_partido(lista_dt,"promedio_rebotes_por_partido",valor)
     elif opcion == 12:
-        pass
+        valor = obtener_numero_entero("Ingrese un valor: ","Error, valor invalido")
+        print("Los jugadores con mas puntos en promedio de asistencias por partido que el valor {0} son: ".format(valor))
+        promedio_por_partido(lista_dt,"promedio_asistencias_por_partido",valor)
     elif opcion == 13:
-        pass
+        jugador_resultado = calcular_estadisticas(lista_dt,"robos_totales","max")
+        print("El jugador con mayor cantidad de robos totales es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["robos_totales"]))
     elif opcion == 14:
-        pass
+        jugador_resultado = calcular_estadisticas(lista_dt,"bloqueos_totales","max")
+        print("El jugador con mayor cantidad de bloqueos totales es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["bloqueos_totales"]))
     elif opcion == 15:
-        pass
+        valor = obtener_numero_entero("Ingrese un valor: ","Error, valor invalido")
+        print("Los jugadores con mas puntos en porcentaje de tiros libres por partido que el valor {0} son: ".format(valor))
+        promedio_por_partido(lista_dt,"porcentaje_tiros_libres",valor)
     elif opcion == 16:
         pass
     elif opcion == 17:
@@ -178,7 +221,8 @@ while opcion != 0:
     elif opcion == 18:
         pass
     elif opcion == 19:
-        pass
+        jugador_resultado = calcular_estadisticas(lista_dt,"temporadas","max")
+        print("El jugador con mayor cantidad de temporadas es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["temporadas"]))
     elif opcion == 20:
         pass
     elif opcion == 21:
