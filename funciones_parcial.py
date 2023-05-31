@@ -42,8 +42,6 @@ def quick_sort(lista:list, orden:str)->list:
     lista_ordenada = lista_menores + lista_mayores
     return lista_ordenada
 
-
-
 def obtener_numero_entero(mensaje:str,mensaje_error:str)-> int:
     patron = r'^[0-9+-]?\d+$'
     if mensaje == "" or mensaje_error == "":
@@ -91,15 +89,23 @@ def listar_jugadores_con_indice(dict_jugadores:dict):
         print("No hay jugadores en la lista") 
 
 
-def obtener_jugador(dict_jugadores:dict,nombre_jugador:str):
-    patron = r"^[a-zA-Z ]+"
+def obtener_jugador(dict_jugadores:dict,nombre_jugador:str=""):
+    retorno = None
+    patron = r"^[a-zA-Z]+"
     lista_jugadores = dict_jugadores["jugadores"]
     if lista_jugadores == [] or nombre_jugador == "":
+
         print("Error, lista o nombre invalidos")
     else:
         for jugador in lista_jugadores:
-            if re.findall(patron,jugador["nombre"])[0] == nombre_jugador.title():
-                return jugador
+            if re.findall(patron,jugador["nombre"])[0] == nombre_jugador:
+                retorno = jugador
+                break
+    
+    if retorno:
+        return retorno
+    else:
+        print("Error, jugador invalido")
 
 def imprimir_menu():
     print("_____________________________________________________________________________________________________________________________________")
@@ -123,6 +129,10 @@ def imprimir_menu():
     print("18. Mostrar los jugadores que han tenido un porcentaje de tiros triples superior a un valor dado")
     print("19. Calcular y mostrar el jugador con la mayor cantidad de temporadas jugadas")
     print("20. Mostrar los jugadores que han tenido un porcentaje de tiros de campo superior a un valor dado")
-    print("23. Exportar rankings a un archivo CSV")
+    print("21. Calcular el ranking de puntos de cada jugador")
+    print("22. Calcular el ranking de rebotes de cada jugador")
+    print("23. Calcular el ranking de asistencias de cada jugador")
+    print("24. Calcular el ranking de robos de cada jugador")
+    print("25. Exportar rankings a un archivo CSV")
     print("0. Salir del programa")
     print("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯")

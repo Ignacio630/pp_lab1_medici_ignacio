@@ -159,10 +159,12 @@ def estadistica_por_partido(dict_jugadores:dict,estadistica:str,valor:int):
     if not aux_max_estadistica:
         print("Error, no se encontraron jugadores con un {0} inferior a {1}".format(re.sub("_"," ",estadistica),valor))
     else:
-        print("Los jugadores con mas puntos en la estadistica {0} por partido que el valor {1} son:".format(re.sub("_"," ",estadistica),valor))
-        for jugador in aux_max_estadistica:
-            print("|Nombre: {0} con un {1} de {2}".format(jugador["nombre"],re.sub("_"," ",estadistica),jugador["estadisticas"][estadistica]))
-    return aux_max_estadistica
+        return aux_max_estadistica
+
+def mostrar_jugadores_por_estadistica(lista_jugadores:list,estadistica:str,valor:int):
+    print("Los jugadores con mas puntos en la estadistica {0} por partido que el valor {1} son:".format(re.sub("_"," ",estadistica),valor))
+    for jugador in lista_jugadores:
+        print("|Nombre: {0} con un {1} de {2}".format(jugador["nombre"],re.sub("_"," ",estadistica),jugador["estadisticas"][estadistica]))
 
 def lista_jugadores_con_valor_inferior(dict_jugadores:dict,estadistica:str,valor:float)->list:
     lista_jugadores = dict_jugadores["jugadores"]
@@ -218,19 +220,31 @@ def calcular_logros(dict_jugadores:dict)-> int:
             
     print("El jugador con la mayor cantidad de logros es {0} son \n{1}".format(jugador_logros_max["nombre"],",\n".join(jugador_logros_max["logros"])))
 
-def mostrar_estadistica_ordenda(dict_jugadores:dict,estadistica:str,valor:float):
-    lista_jugadores = estadistica_por_partido(dict_jugadores,estadistica,valor)
-    lista_ordenada = []
+
+def mostrar_estadistica_ordenda(dict_jugadores: dict, estadistica: str, valor: float):
+    lista_jugadores = estadistica_por_partido(dict_jugadores, estadistica, valor)
     if not dict_jugadores or not estadistica or not valor:
-        print("Error al cargar los parametros")
+        print("Error al cargar los parámetros")
+
+    posiciones = [item["posicion"] for item in lista_jugadores]
+
+    # Ordenar la lista auxiliar utilizando quick_sort
+    posiciones_ordenadas = quick_sort(posiciones, "ascendente")
+
+    # Reconstruir la lista de diccionarios en el orden correspondiente
+    lista_ordenada = [item for pos in posiciones_ordenadas for item in lista_jugadores if item["posicion"] == pos]
     
-    for 
-    
-    if not lista_ordenada:
-        print("Error, la lista esta vacia")
-    else:
-        return lista_ordenada
-print(mostrar_estadistica_ordenda(lista_dt,"promedio_puntos_por_partido",10) )
+    for j in lista_ordenada:
+        print("|Nombre: {0} con un {1} de {2}".format(j["nombre"],re.sub("_"," ",estadistica),j["estadisticas"][estadistica]))
+        
+mostrar_estadistica_ordenda(lista_dt,"promedio_puntos_por_partido",10)
+
+
+
+
+
+
+
 while True:
     imprimir_menu()
     opcion = obtener_numero_entero("Ingrese una opcion: ","Error, no se ingreso un entero :(")
@@ -271,13 +285,16 @@ while True:
         print("El jugador con mayor cantidad de asistencias totales es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["asistencias_totales"]))
     elif opcion == 10:
         valor = obtener_numero_entero("Ingrese un valor: ","Error, valor invalido")
-        estadistica_por_partido(lista_dt,"promedio_puntos_por_partido",valor)
+        resultado = estadistica_por_partido(lista_dt,"promedio_puntos_por_partido",valor)
+        mostrar_jugadores_por_estadistica(resultado,"promedio_puntos_por_partido",valor)
     elif opcion == 11:
         valor = obtener_numero_entero("Ingrese un valor: ","Error, valor invalido")
-        estadistica_por_partido(lista_dt,"promedio_rebotes_por_partido",valor)
+        resultado = estadistica_por_partido(lista_dt,"promedio_rebotes_por_partido",valor)
+        mostrar_jugadores_por_estadistica(resultado,"promedio_rebotes_por_partido",valor)
     elif opcion == 12:
         valor = obtener_numero_entero("Ingrese un valor: ","Error, valor invalido")
-        estadistica_por_partido(lista_dt,"promedio_asistencias_por_partido",valor)
+        resultado = estadistica_por_partido(lista_dt,"promedio_asistencias_por_partido",valor)
+        mostrar_jugadores_por_estadistica(resultado,"promedio_asistencias_por_partido",valor)
     elif opcion == 13:
         jugador_resultado = calcular_estadisticas(lista_dt,"robos_totales","max")
         print("El jugador con mayor cantidad de robos totales es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["robos_totales"]))
@@ -294,6 +311,8 @@ while True:
     elif opcion == 18:
         valor = obtener_numero_entero("Ingrese un valor: ","Error, valor invalido")
         estadistica_por_partido(lista_dt,"porcentaje_tiros_triples",valor)
+        resultado = estadistica_por_partido(lista_dt,"porcentaje_tiros_triples",valor)
+        mostrar_jugadores_por_estadistica(resultado,"porcentaje_tiros_triples",valor)
     elif opcion == 19:
         jugador_resultado = calcular_estadisticas(lista_dt,"temporadas","max")
         print("El jugador con mayor cantidad de temporadas es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["temporadas"]))
