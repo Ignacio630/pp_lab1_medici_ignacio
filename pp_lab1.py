@@ -1,8 +1,9 @@
 from funciones_parcial import *
 os.system("cls" if os.name=="nt" else "clear")
+
+
 lista_dt = leer_json("dt.json")
 
-# 1
 def listar_jugadores(dict_jugadores:dict):
     """
     Lista el nombre y posicion de los jugadores
@@ -19,8 +20,6 @@ def listar_jugadores(dict_jugadores:dict):
     else:
         print("No hay jugadores en la lista")
 
-  
-#2
 def estadisticas_jugador(dict_jugadores:dict,indice:int)-> list:
     """
     Muestra y devuelve las estadisticas del jugador seleccionado
@@ -60,7 +59,7 @@ def estadisticas_jugador(dict_jugadores:dict,indice:int)-> list:
         return lista_estadisticas
     else:
         print("Error, las estadisticas no existen")
-#3
+
 def exportar_estadisticas_csv(estadisticas:list,jugador:dict):
     """
     Exporta a un archivo csv con las estadisticas del jugador
@@ -103,7 +102,6 @@ def promedio_estadistica(dict_jugadores:dict,estadistica:str)-> float:
     promedio = acumulador_promedios / contador_promedios
     return promedio
 
-#6
 def validar_salon_fama(jugador:dict):
     """
     Valida y muestra si el jugador pasado por parametros esta en el salon de la fama 
@@ -120,11 +118,10 @@ def validar_salon_fama(jugador:dict):
         for logros in jugador["logros"]:
             if re.findall("Miembro del Salon de la Fama del Baloncesto$",logros):
                 flag_salon_de_la_fama = True
-
-    if flag_salon_de_la_fama:
-        print("El jugador {0} si pertenece al salon de la fama! ".format(jugador["nombre"]))
-    else:
-        print("El jugador {0} no pertenece al salon de la fama! ".format(jugador["nombre"]))
+        if flag_salon_de_la_fama:
+            print("El jugador {0} si pertenece al salon de la fama! ".format(jugador["nombre"]))
+        else:
+            print("El jugador {0} no pertenece al salon de la fama! ".format(jugador["nombre"]))
 
 def calcular_estadisticas(dict_jugadores:dict,estadistica:str,min_max:str)-> dict:
     lista_jugadores = dict_jugadores["jugadores"]
@@ -162,11 +159,10 @@ def estadistica_por_partido(dict_jugadores:dict,estadistica:str,valor:int):
     if not aux_max_estadistica:
         print("Error, no se encontraron jugadores con un {0} inferior a {1}".format(re.sub("_"," ",estadistica),valor))
     else:
-        print("Los jugadores con mas puntos en la estadistica {0} por partido que el valor son: {1}".format(re.sub("_"," ",estadistica),valor))
+        print("Los jugadores con mas puntos en la estadistica {0} por partido que el valor {1} son:".format(re.sub("_"," ",estadistica),valor))
         for jugador in aux_max_estadistica:
             print("|Nombre: {0} con un {1} de {2}".format(jugador["nombre"],re.sub("_"," ",estadistica),jugador["estadisticas"][estadistica]))
-
-# Calcular y mostrar el promedio de puntos por partido del equipo excluyendo al jugador con la menor cantidad de puntos por partido.
+    return aux_max_estadistica
 
 def lista_jugadores_con_valor_inferior(dict_jugadores:dict,estadistica:str,valor:float)->list:
     lista_jugadores = dict_jugadores["jugadores"]
@@ -184,32 +180,29 @@ def lista_jugadores_con_valor_inferior(dict_jugadores:dict,estadistica:str,valor
     else:
         return aux_lista_jugadores
 
-def promedio_puntos_por_partido_excluyendo_menor(dict_jugadores:dict,estadistica:str,valor:float):
+def promedio_puntos_por_partido_excluyendo_menor(dict_jugadores:dict,estadistica:str):
     lista_jugadores = dict_jugadores["jugadores"]
     aux_lista_jugadores = []
     acumulador_estadistica = 0
     
-    if not dict_jugadores or not estadistica or not valor:
+    if not dict_jugadores or not estadistica:
         print("Error al cargar los parametros")
 
     jugador_con_peor_promedio = calcular_estadisticas(dict_jugadores,estadistica,"min")
-    print(jugador_con_peor_promedio)
 
     for jugador in lista_jugadores:
         if jugador["nombre"] != jugador_con_peor_promedio["nombre"]:
             aux_lista_jugadores.append(jugador)
     if not aux_lista_jugadores:
-        print("Error, no se encontraron jugadores con un {0} inferior a {1}".format(re.sub("_"," ",estadistica),valor))
+        print("Error, no se encontro la lista de jugadores")
     else:
-        print("El promedio de puntos en la estadistica {0} por partido que el valor son: {1}".format(re.sub("_"," ",estadistica),valor))
         for jugador in aux_lista_jugadores:
-            acumulador_estadistica += jugador["estadisticas"]["promedio_puntos_por_partido"]
+            acumulador_estadistica += jugador["estadisticas"][estadistica]
+    
         promedio_puntos_por_partido_equipo = acumulador_estadistica / len(aux_lista_jugadores)
         
         print("El promedio de puntos por partido del equipo es: {0:.2f}".format(promedio_puntos_por_partido_equipo))
-        print("El jugador excluido es: {0} con un promedio de {1}".format(jugador_con_peor_promedio["nombre"], jugador_con_peor_promedio["estadisticas"]["promedio_puntos_por_partido"]))
-    
-
+        print("El jugador excluido es: {0} con un promedio de {1}".format(jugador_con_peor_promedio["nombre"], jugador_con_peor_promedio["estadisticas"][estadistica]))
 
 def calcular_logros(dict_jugadores:dict)-> int:
     
@@ -222,17 +215,28 @@ def calcular_logros(dict_jugadores:dict)-> int:
         if contador_logros_max < len(jugador["logros"]):
             contador_logros_max = len(jugador["logros"])
             jugador_logros_max = jugador
-    print("El jugador con la mayor cantidad de logros es {} con {} logros".format(jugador_logros_max["nombre"],contador_logros_max))
+            
+    print("El jugador con la mayor cantidad de logros es {0} son \n{1}".format(jugador_logros_max["nombre"],",\n".join(jugador_logros_max["logros"])))
 
-opcion = None
-promedio_puntos_por_partido_excluyendo_menor(lista_dt,"promedio_puntos_por_partido",10)
-while opcion != 0:
+def mostrar_estadistica_ordenda(dict_jugadores:dict,estadistica:str,valor:float):
+    lista_jugadores = estadistica_por_partido(dict_jugadores,estadistica,valor)
+    lista_ordenada = []
+    if not dict_jugadores or not estadistica or not valor:
+        print("Error al cargar los parametros")
+    
+    for 
+    
+    if not lista_ordenada:
+        print("Error, la lista esta vacia")
+    else:
+        return lista_ordenada
+print(mostrar_estadistica_ordenda(lista_dt,"promedio_puntos_por_partido",10) )
+while True:
     imprimir_menu()
     opcion = obtener_numero_entero("Ingrese una opcion: ","Error, no se ingreso un entero :(")
     
     if opcion == 1:
         listar_jugadores(lista_dt)
-        input("Presione key para continuar...")
     elif opcion == 2:
         resultado_estadisticas_jugador = []
         listar_jugadores_con_indice(lista_dt)
@@ -247,14 +251,14 @@ while opcion != 0:
             print("No se eligio un jugador")
     elif opcion == 4:
         nombre_jugador = input("Ingrese el nombre del jugador: ")
-        logros_jugadores(lista_dt,nombre_jugador.capitalize())
+        logros_jugadores(lista_dt,nombre_jugador.title())
     elif opcion == 5:
         resultado = promedio_estadistica(lista_dt,"promedio_puntos_por_partido")
         print("El promedio de los puntos por partido es: {0:.2f}".format(resultado))
     elif opcion == 6:
         listar_jugadores(lista_dt)
         nombre_jugador = input("Ingrese el nombre del jugador: ")
-        resultado = obtener_jugador(lista_dt,nombre_jugador.capitalize())
+        resultado = obtener_jugador(lista_dt,nombre_jugador)
         validar_salon_fama(resultado)
     elif opcion == 7:
         jugador_resultado = calcular_estadisticas(lista_dt,"rebotes_totales","max")
@@ -267,15 +271,12 @@ while opcion != 0:
         print("El jugador con mayor cantidad de asistencias totales es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["asistencias_totales"]))
     elif opcion == 10:
         valor = obtener_numero_entero("Ingrese un valor: ","Error, valor invalido")
-        print("Los jugadores con mas puntos en promedio de puntos por partido que el valor {0} son: ".format(valor))
         estadistica_por_partido(lista_dt,"promedio_puntos_por_partido",valor)
     elif opcion == 11:
         valor = obtener_numero_entero("Ingrese un valor: ","Error, valor invalido")
-        print("Los jugadores con mas puntos en promedio de rebotes por partido que el valor {0} son: ".format(valor))
         estadistica_por_partido(lista_dt,"promedio_rebotes_por_partido",valor)
     elif opcion == 12:
         valor = obtener_numero_entero("Ingrese un valor: ","Error, valor invalido")
-        print("Los jugadores con mas puntos en promedio de asistencias por partido que el valor {0} son: ".format(valor))
         estadistica_por_partido(lista_dt,"promedio_asistencias_por_partido",valor)
     elif opcion == 13:
         jugador_resultado = calcular_estadisticas(lista_dt,"robos_totales","max")
@@ -285,10 +286,9 @@ while opcion != 0:
         print("El jugador con mayor cantidad de bloqueos totales es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["bloqueos_totales"]))
     elif opcion == 15:
         valor = obtener_numero_entero("Ingrese un valor: ","Error, valor invalido")
-        print("Los jugadores con mas puntos en porcentaje de tiros libres por partido que el valor {0} son: ".format(valor))
         estadistica_por_partido(lista_dt,"porcentaje_tiros_libres",valor)
     elif opcion == 16:
-        promedio_puntos_por_partido_excluyendo_menor(lista_dt,"promedio_puntos_por_partido",10)
+        promedio_puntos_por_partido_excluyendo_menor(lista_dt,"promedio_puntos_por_partido")
     elif opcion == 17:
         calcular_logros(lista_dt)
     elif opcion == 18:
@@ -298,7 +298,7 @@ while opcion != 0:
         jugador_resultado = calcular_estadisticas(lista_dt,"temporadas","max")
         print("El jugador con mayor cantidad de temporadas es: {0} y tiene {1:.0f}".format(jugador_resultado["nombre"],jugador_resultado["estadisticas"]["temporadas"]))
     elif opcion == 20:
-        pass
+        valor = obtener_numero_entero("Ingrese un valor: ","Error, el dato ingresado no es valido")
     elif opcion == 0:
         print("Gracias por usar mi programa...")
         break
